@@ -1,14 +1,17 @@
 class JsonImporterService
+  Result = Struct.new(:success, :logs)
 
   def initialize(payload)
     @payload = payload
+    @logs = []
   end
 
   def call
     process_restaurants
-    true
+    Result.new(true, @logs)
   rescue StandardError => e
-    puts "Import failed: #{e.message}"
+    @logs << { error: e.message }
+    Result.new(false, @logs)
   end
 
   private
@@ -37,8 +40,9 @@ class JsonImporterService
         menu_item.price = price
         menu_item.save!
         menu.menu_items << menu_item unless menu.menu_items.exists?(menu_item.id)
+        @logs << { menu: menu.name, item: name, status: 'created_or_linked' }
       rescue ActiveRecord::RecordInvalid => e
-        puts "Error importing menu item '#{name}': #{e.message}"
+        @logs << { menu: menu.name, item: name, status: 'failed', error: e.record.errors.full_messages }
       end
     end
   end

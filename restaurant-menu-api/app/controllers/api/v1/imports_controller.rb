@@ -9,8 +9,8 @@ class Api::V1::ImportsController < ApplicationController
               end
 
     result = JsonImporterService.new(payload).call
-    status = result ? :ok : :unprocessable_entity
-    render json: { success: result }, status: status
+    status = result.success ? :ok : :unprocessable_entity
+    render json: { success: result.success, logs: result.logs }, status: status
   rescue JSON::ParserError => e
     render json: { success: false, error: "invalid_json", message: e.message }, status: :bad_request
   end
