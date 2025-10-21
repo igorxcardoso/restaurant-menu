@@ -7,7 +7,9 @@ class JsonImporterService
   end
 
   def call
-    process_restaurants
+    ActiveRecord::Base.transaction do
+      process_restaurants
+    end
     Result.new(true, @logs)
   rescue StandardError => e
     @logs << { error: e.message }
