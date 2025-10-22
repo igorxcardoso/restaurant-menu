@@ -2,17 +2,6 @@
 
 This service is a simple Rails 7 API for managing restaurants, menus, and menu items. It includes a JSON import tool (via HTTP and Rake) that reads a payload containing restaurants → menus → menu_items and persists them to the database.
 
-Contents
-
-* Overview
-* How to Run
-* Main Endpoints
-* JSON Import
-* Rake Task (CLI)
-* Tests
-* Use Cases and Examples
-* Notes and Next Steps
-
 ## Overview
 
 Main models:
@@ -68,7 +57,7 @@ The `POST /api/v1/imports` endpoint accepts:
 * Raw JSON in the request body (`Content-Type: application/json`)
 * File upload via multipart/form-data in the `file` field
 
-Examples using `curl`:
+### Examples using `curl`
 
 * Sending the file as raw JSON body:
 
@@ -93,6 +82,39 @@ curl -X POST http://localhost:3000/api/v1/imports \
   -d 'not-json'
 ```
 
+### Example importing via Postman (payload)
+
+You can test the import using Postman raw JSON payload.
+
+1) Raw JSON (Body -> raw -> JSON)
+
+- Method: POST
+- URL: http://localhost:3000/api/v1/imports
+- Headers: Content-Type: application/json
+- Body (raw JSON): paste the payload below.
+
+Example raw body (shortened):
+
+```json
+{
+  "restaurants": [
+    {
+      "name": "Poppo's Cafe",
+      "menus": [
+        {
+          "name": "lunch",
+          "menu_items": [
+            { "name": "Burger", "price": 9.00 },
+            { "name": "Small Salad", "price": 5.00 }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+Press Send. You should receive a JSON response with `success` and `logs`.
+
 Example response (success 200):
 
 ```json
@@ -109,8 +131,14 @@ If a JSON parsing error occurs: `400 Bad Request` with `{ success: false, error:
 
 If a service-level failure occurs (e.g., validation error), the response will be `422` with `success: false` and a `logs` array describing the issues (depending on the service implementation).
 
-Demonstration screenshots of the above tests:
-![Bash Tests](docs/import-test-bash.png)
+### Demonstration screenshots of the above tests:
+<p align="center">
+  <a href="docs/import-test-bash.png" target="_blank">
+    <img src="docs/import-test-bash.png" alt="Bash Tests" style="max-width:75%;height:auto;border:1px solid #eee;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,0.08);" />
+  </a>
+  <br/>
+  <small>Figure: Terminal run of Rake import + quick smoke tests (click to view full size).</small>
+</p>
 
 ## Rake Task (CLI)
 
@@ -120,15 +148,6 @@ There is a Rake task to import a local file:
 cd restaurant-menu-api
 rake import:from_file FILE=/absolute/path/to/restaurant_data.json
 ```
-
-Validation and exit codes:
-
-* 0: success
-* 2: missing `FILE` parameter or file not found
-* 3: invalid JSON (parse error)
-* 4: import service not found (look for `JsonImporterService` or `JsonImporter` under `app/services`)
-* 5: exception during import (stack trace printed to STDERR)
-* 6: import executed but returned unexpected format (legacy service)
 
 Example output (success):
 
