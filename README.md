@@ -168,6 +168,67 @@ bundle exec rspec
 
 The specs include model tests, request specs for endpoints, and service specs for the importer (covering import and reimport to verify deduplication).
 
+## Restaurant Menu Client (frontend)
+
+There is a small React + Vite frontend in the `restaurant-menu-client` folder that demonstrates the API. It fetches `GET /api/v1/restaurants` and shows restaurants, their menus and menu items.
+
+### Requirements
+
+- Node.js (recommended 18+)
+- npm or yarn
+
+### Configure the client
+
+The client reads the backend URL from the `VITE_API_URL` environment variable at build/dev time. Example values:
+
+- Local development (Rails running on localhost): `http://localhost:3000`
+
+Set the variable when running the dev server or when building:
+
+```bash
+# from the project root
+cd restaurant-menu-client
+
+# Dependencies installation
+npm install
+
+# Start dev server, telling Vite where the API is:
+VITE_API_URL=http://localhost:3000 npm run dev
+
+# Preview the built bundle (after build):
+npm run preview
+```
+
+Tip: if you use a cross-platform runner, you can also add a `.env` file in `restaurant-menu-client` with the line:
+
+```
+VITE_API_URL=http://localhost:3000
+```
+
+Ensure the API is running (see above). By default the Rails API runs on port 3000.
+
+Open the URL printed by Vite (usually `http://localhost:5173`) and you should see the app listing restaurants and menus.
+
+### Demo screenshot
+
+<p align="center">
+  <a href="docs/demo1.png" target="_blank">
+    <img src="docs/demo1.png" alt="Demo 1" style="max-width:80%;height:auto;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="docs/demo2.png" target="_blank">
+    <img src="docs/demo2.png" alt="Demo 2" style="max-width:80%;height:auto;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="docs/demo3.png" target="_blank">
+    <img src="docs/demo3.png" alt="Demo 3" style="max-width:80%;height:auto;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);" />
+  </a>
+</p>
+
 ## Use Cases and Recommendations
 
 * To import a batch of menus and items (from the provided JSON file), use the HTTP endpoint or the Rake task.
