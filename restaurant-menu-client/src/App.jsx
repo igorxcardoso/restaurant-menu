@@ -10,7 +10,8 @@ function App() {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:3000/api/v1/restaurants');
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await fetch(`${apiUrl}/api/v1/restaurants`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
