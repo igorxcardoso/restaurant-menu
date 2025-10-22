@@ -29,11 +29,11 @@ class JsonImporterService
     Array(menus).each do |m|
       menu = restaurant.menus.find_or_create_by!(name: m['name'])
       items_key = m.key?('menu_items') ? 'menu_items' : (m.key?('dishes') ? 'dishes' : nil)
-      process_menu_items(menu, Array(m[items_key])) if items_key
+      process_menu_items(restaurant, menu, Array(m[items_key])) if items_key
     end
   end
 
-  def process_menu_items(menu, items)
+  def process_menu_items(restaurant, menu, items)
     items.each do |item|
       name = item['name']
       price = item['price']
@@ -42,9 +42,9 @@ class JsonImporterService
         menu_item.price = price
         menu_item.save!
         menu.menu_items << menu_item unless menu.menu_items.exists?(menu_item.id)
-        @logs << { menu: menu.name, item: name, status: 'created_or_linked' }
+        @logs << { restaurant: restaurant.name, menu: menu.name, item: name, status: 'created_or_linked' }
       rescue ActiveRecord::RecordInvalid => e
-        @logs << { menu: menu.name, item: name, status: 'failed', error: e.record.errors.full_messages }
+        @logs << { restaurant: restaurant.name, menu: menu.name, item: name, status: 'failed', error: e.record.errors.full_messages }
       end
     end
   end
