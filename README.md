@@ -23,6 +23,20 @@ Main models:
 
 A service called `JsonImporterService` processes a JSON payload with the given structure and returns operation logs.
 
+## Database model (visual)
+
+Want a quick mental map of how the data is organized? Click the diagram to open the full-size image.
+
+<p align="center">
+  <a href="docs/database-model.png" target="_blank">
+    <img src="docs/database-model.png" alt="Database model diagram" style="max-width:80%;height:auto;border:1px solid #ddd;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.12);" />
+  </a>
+</p>
+
+Figure: Restaurants own Menus; Menus have a many-to-many link to MenuItems. MenuItem names are unique across the system and prices are stored on the MenuItem model.
+
+Tip: Use this diagram when you add features — it helps reason about where validations, indexes and foreign keys belong.
+
 ## How to Run (Development)
 
 Prerequisites: Ruby 3.4.6, Bundler, and a configured PostgreSQL database (`config/database.yml`). In the `restaurant-menu-api` directory:
