@@ -44,5 +44,8 @@ group :development, :test do
   
   # Factory Bot for test data
   gem "factory_bot_rails"
+
+  # Use rubocop-rails for Rails-specific linting
+  gem "rubocop-rails", require: false
 end
 
